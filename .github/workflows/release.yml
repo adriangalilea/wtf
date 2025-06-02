@@ -1,0 +1,82 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'pyproject.toml'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # For creating releases and tags
+      id-token: write  # For PyPI trusted publishing
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+    
+    - name: Get version from pyproject.toml
+      id: get_version
+      run: |
+        VERSION=$(grep '^version =' pyproject.toml | sed 's/version = "\(.*\)"/\1/')
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "TAG=v$VERSION" >> $GITHUB_OUTPUT
+    
+    - name: Check if tag exists
+      id: check_tag
+      run: |
+        if git rev-parse ${{ steps.get_version.outputs.TAG }} >/dev/null 2>&1; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Create tag
+      if: steps.check_tag.outputs.exists == 'false'
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git tag -a ${{ steps.get_version.outputs.TAG }} -m "Release ${{ steps.get_version.outputs.TAG }}"
+        git push origin ${{ steps.get_version.outputs.TAG }}
+    
+    - name: Build package
+      if: steps.check_tag.outputs.exists == 'false'
+      run: uv build
+    
+    - name: Create GitHub Release
+      if: steps.check_tag.outputs.exists == 'false'
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ steps.get_version.outputs.TAG }}
+        name: ${{ steps.get_version.outputs.TAG }}
+        body: |
+          ## wtf-launcher ${{ steps.get_version.outputs.VERSION }}
+          
+          Install from PyPI:
+          ```bash
+          pip install wtf-launcher
+          # or
+          uv tool install wtf-launcher
+          ```
+          
+          See [README](https://github.com/adriangalilea/wtf) for setup instructions.
+        files: |
+          dist/*.whl
+          dist/*.tar.gz
+    
+    - name: Publish to PyPI
+      if: steps.check_tag.outputs.exists == 'false'
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        attestations: true
