@@ -1,6 +1,6 @@
 # WTF - What The F*** Can I Run?
 
-> A blazing-fast terminal launcher that actually helps you find and run your installed tools
+> A blazing-fast terminal launcher with built-in documentation - discover, understand, and run your installed tools
 
 [![GitHub release](https://img.shields.io/github/release/adriangalilea/wtf.svg)](https://github.com/adriangalilea/wtf/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -12,6 +12,7 @@ You've installed 200+ tools via Homebrew, npm, cargo, pip, and who knows what el
 ## The Solution
 
 `wtf` - A smart command launcher that:
+- 📖 **Shows instant help** - See tldr/man pages in the preview pane WITHOUT running commands
 - 🔍 Discovers all your installed tools automatically
 - 🚀 Launches them with fuzzy search
 - 📊 Learns what you use most (frecency)
@@ -73,7 +74,7 @@ wtf init fish
 #### Zsh/Bash
 ```bash
 # Add to ~/.zshrc or ~/.bashrc
-eval "$(wtf init zsh)"  # Or use 'wtf init bash' for bash
+eval "$(wtf init zsh)"  # Or use 'wtf init bash' for Bash
 ```
 
 This will:
@@ -87,18 +88,28 @@ This will:
 
 ```bash
 wtf                      # Show only user-installed commands (default)
-wtf --all               # Show ALL commands including system utilities
+wtf --all/-a            # Show ALL commands including system utilities
 wtf config              # Edit configuration file
-wtf --debug             # Debug mode - prints all commands to stdout
-wtf --debug --all       # Debug mode including system commands
+wtf --list/-l           # List all commands to stdout (for piping)
+wtf --list --all        # List all commands including system
 wtf init <shell>        # Generate shell integration code
 ```
+
+### Built-in Help Preview 📖
+
+WTF shows you instant documentation for any command **without running it**! As you navigate through commands, the preview pane displays:
+
+- **tldr pages** - Concise examples and explanations (if `tealdeer` is installed)
+- **man pages** - Traditional documentation
+- **--help output** - When other docs aren't available
+
+This means you can quickly understand what a command does before using it. No more accidentally running dangerous commands or forgetting what that cryptic tool name means!
 
 ### Keyboard Shortcuts
 - `Alt+W` / `Option+W` - Quick launch
 - `↑↓` - Navigate options
 - `Enter` - Insert selected command into prompt
-- `Ctrl+/` - Toggle preview pane
+- **`Ctrl+/` - Toggle preview pane (shows tldr/man/help)**
 - `Esc` - Cancel
 
 ### System vs User Commands
@@ -160,12 +171,12 @@ Configuration options:
 ## Features
 
 ### Current (v0.1)
+- ✅ **Rich previews** - Shows tldr pages, man pages, or help text WITHOUT executing
 - ✅ Discovers commands from multiple sources (PATH, Homebrew, npm, cargo, etc.)
 - ✅ Fuzzy search with fzf integration (searches command names only, not paths)
 - ✅ Smart categorization (Git, Editors, Package managers, etc.)
 - ✅ Shell-agnostic Python core (Fish, Zsh, Bash support)
 - ✅ Frecency tracking - Your most-used commands bubble to the top
-- ✅ Rich previews - Shows tldr pages, man pages, or help text
 - ✅ Pydantic-based config file - Fully customizable
 - ✅ System command filtering - Focus on YOUR tools by default
 - ✅ Automatic deduplication - No duplicate entries for CLI/App versions
@@ -177,8 +188,8 @@ Configuration options:
 - 🔌 **Plugin system** - Add custom command sources
 
 ### Future (v2.0+)
+- 🔍 **Help-based search** - Fuzzy search command descriptions, not just names
 - 🤖 AI command suggestions based on context
-- 📦 Plugin system for custom sources
 - 🌐 Command sharing/sync across machines
 - 📊 Usage analytics and insights
 
@@ -225,7 +236,7 @@ uv pip install -e .
 - **Speed**: Fast enough for this use case (launching is instant)
 - **Ecosystem**: Rich libraries for shell integration, caching, etc.
 - **Iteration**: Much faster to develop and maintain than Rust/Go
-- **Distribution**: Easy via pip, conda, homebrew
+- **Distribution**: Easy via pip, pipx, uv, conda, homebrew
 
 ## License
 

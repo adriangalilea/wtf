@@ -319,8 +319,8 @@ def main():
             else:
                 print("Usage: wtf init <shell>", file=sys.stderr)
                 sys.exit(1)
-        elif sys.argv[1] == "--debug":
-            # Debug mode - print everything to stdout
+        elif sys.argv[1] in ["--list", "-l"]:
+            # List mode - print everything to stdout
             include_system = "--all" in sys.argv
             items = get_all_commands(include_system=include_system)
 
@@ -362,9 +362,9 @@ def main():
             print("wtf - What The F*** Can I Run?")
             print("\nUsage:")
             print("  wtf              Show user-installed commands only")
-            print("  wtf --all        Show ALL commands (including system)")
+            print("  wtf --all/-a     Show ALL commands (including system)")
             print("  wtf config       Edit configuration file")
-            print("  wtf --debug      Debug mode - prints all commands to stdout")
+            print("  wtf --list/-l    List all commands to stdout (for piping)")
             print("  wtf init <shell> Generate shell integration")
             print("\nConfig file: ~/.config/wtf/config.json")
             sys.exit(0)

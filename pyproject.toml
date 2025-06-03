@@ -1,6 +1,6 @@
 [project]
 name = "wtf-launcher"
-version = "0.1.0"
+version = "0.1.1"
 description = "What The F*** Can I Run? - Fast command launcher"
 readme = "README.md"
 requires-python = ">=3.12"
