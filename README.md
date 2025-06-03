@@ -95,6 +95,14 @@ wtf --list --all        # List all commands including system
 wtf init <shell>        # Generate shell integration code
 ```
 
+### Screenshots
+
+![WTF running with eza command output](images/wtf-eza-output.png)
+*WTF in action - showing command preview for `eza` with documentation*
+
+![Terminal after exiting WTF](images/wtf-after-exit.png)
+*Clean exit - your terminal remains untouched*
+
 ### Built-in Help Preview 📖
 
 WTF shows you instant documentation for any command **without running it**! As you navigate through commands, the preview pane displays:
